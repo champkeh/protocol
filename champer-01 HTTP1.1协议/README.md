@@ -1215,3 +1215,6 @@ https://en.wikipedia.org/wiki/Cross-site_request_forgery
   - 告知浏览器允许哪些域名访问当前资源，* 表示允许所有域。为避免缓存错乱，响应中需要携带 Vary: Origin
 - Access-Control-Allow-Credentials
   - 告知浏览器是否可以将 Credentials 暴露给客户端使用，Credentials 包含 cookie、authorization 头部、TLS 证书等。
+
+
+## 条件请求的作用
