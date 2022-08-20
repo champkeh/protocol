@@ -323,3 +323,281 @@ RR 的变体，通过复制请求的结果，为后续请求复用
 ### 风格演化
 
 ![img_11.png](img_11.png)
+
+
+## 使用 Chrome 的 Network 面板分析 HTTP 报文
+
+https://developers.google.com/web/tools/chrome-devtools/network
+
+### 过滤器: 属性过滤
+
+多属性间通过空格实现 AND 操作
+
+- domain: 仅显示来自指定域的资源。可以使用通配符字符(*)纳入多个域
+- has-response-header: 显示包含指定 HTTP 响应头的资源
+- is: 使用 is:running 可以查找 WebSocket 资源，is:from-cache 可查找缓存读出的资源
+- larger-than: 显示大于指定大小的资源(以字节为单位)。将值设为 1000 等同于设置为 1k
+- method: 显示通过指定 HTTP 方法类型检索的资源
+- mime-type: 显示指定 MIME 类型的资源
+- mixed-content: 显示所有混合内容资源(mixed-content:all)，或者仅显示当前显示的资源(mixed-content:displayed)
+- scheme: 显示通过未保护 HTTP (scheme:http) 或受保护 HTTPS (scheme:https) 检索的资源
+- set-cookie-domain: 显示具有 Set-Cookie 标头并且 Domain 属性与指定值匹配的资源
+- set-cookie-name: 显示具有 Set-Cookie 标头并且名称与指定值匹配的资源
+- set-cookie-value: 显示具有 Set-Cookie 标头并且值与指定值匹配的资源
+- status-code: 仅显示 HTTP 状态代码与指定代码匹配的资源
+
+### 请求列表的排序
+
+- 时间排序，默认
+- 按列排序
+- 按活动时间排序
+  - Start Time: 发出的第一个请求位于顶部
+  - Response Time: 开始下载的第一个请求位于顶部
+  - End TIme: 完成的第一个请求位于顶部
+  - Total Duration: 连接设置时间和请求/响应时间最短的请求位于顶部
+  - Latency: 等待最短响应时间的请求位于顶部
+
+查看请求上下游：按住 shift 键悬停在请求上，绿色是上游，红色是下游。
+
+### 浏览器加载时间
+
+- 触发流程
+  - 解析 HTML 结构
+  - 加载外部脚本和样式表文件
+  - 解析并执行脚本代码，部分脚本会阻塞页面的加载
+  - DOM 树构建完成，DOMContentLoaded 事件
+  - 加载图片等外部文件
+  - 页面加载完毕，load 事件
+
+### 请求时间详细分布
+
+- Queueing: 浏览器在以下情况下对请求排队
+  - 存在更高优先级的请求
+  - 此源已打开六个 TCP 连接，达到限值，仅适用于 HTTP/1.0 和 HTTP/1.1
+  - 浏览器正在短暂分配磁盘缓存中的空间
+- Stalled: 请求可能会因 Queueing 中描述的任何原因而停止
+- DNS Lookup: 浏览器正在解析请求的 IP 地址
+- Proxy Negotiation: 浏览器正在与代理服务器协商请求
+- Request sent: 正在发送请求
+- ServiceWorker Preparation: 浏览器正在启动 Service Worker
+- Request to ServiceWorker: 正在将请求发送到 Service Worker
+- Waiting (TTFB): 浏览器正在等待响应的第一个字节。TTFB 表示 Time to First Byte，此时间包括1次往返延迟时间及服务器准备响应所用的时间
+- Content Download: 浏览器正在接收响应
+- Receiving Push: 浏览器正在通过 HTTP/2 服务器推送接收此响应的数据
+- Reading Push: 浏览器正在读取之前收到的本地数据
+
+
+## URI 的基本格式以及与 URL 的区别
+
+### 什么是 URI
+
+- URL: RFC1738(1994.12)，Uniform Resource Locator，表示资源的位置，期望提供查找资源的方法
+- URN: RFC2141(1997.5)，Uniform Resource Name，期望为资源提供持久的、位置无关的标识方式，并允许简单地将多个命名空间映射到单个 URN 命名空间
+  - 例如磁力链接 magnet:?xt=urn:sha1:YNCKHTQC5C
+- URI: RFC1630(1994.6)、RFC3986(2005.1，取代 RFC2396 和 RFC2732)，Uniform Resource Identifier，用以区分资源，是 URL 和 URN 的超集，用以取代 URL 和 URN 概念
+
+### Uniform Resource Identifier
+
+- Resource 资源
+- Identifier 标识符
+- Uniform 统一
+
+### URI 的组成
+
+- 组成: schema, user information, host, port, path, query, fragment
+
+![img_12.png](img_12.png)
+
+https://tools.ietf.org/html/rfc7231?test=1#page-7
+
+### URI 格式: ABNF 定义
+
+- URI = schema ":" hier-part [ "?" query ] [ "#" fragment ]
+- schema = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+  - 例如: http, https, ftp, mailto, rtsp, file, telnet
+- query = *( pchar / "/" / "?" )
+- fragment = *( pchar / "/" / "?" )
+- hier-part = "//" authority path-abempty / path-absolute / path-rootless / path-empty
+  - authority = [ userinfo "@" ] host [ ":" port ]
+    - userinfo = *( unreserved / pct-encoded / sub-delims / ":" )
+    - host = IP-literal / IPv4address / reg-name
+    - port = *DIGIT
+  - path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
+    - path-abempty = *( "/" segment )
+      - 以 / 开头的路径或者空路径
+    - path-absolute = "/" [ segment-nz *( "/" segment )]
+      - 以 / 开头的路径，但不能以 // 开头
+    - path-noscheme = segment-nz-nc *( "/" segment )
+      - 以非 : 号开头的路径
+    - path-rootless = segment-nz *( "/" segment )
+      - 相对 path-noscheme，增加允许以 : 号开头的路径
+    - path-empty = 0 <pchar>
+      - 空路径
+
+
+## 为什么要对 URI 进行编码？
+
+- 传输数据中，如果存在用作分隔符的保留字符时怎么办？
+- 对可能 产生歧义性的数据编码
+  - 不在 ASCII 范围内的字符
+  - ASCII 中不可显示的字符
+  - URI 中规定的保留字符
+  - 不安全字符(传输环节中可能会被不正确处理)，如空格、引号、尖括号等
+
+示例：
+https://www.baidu.com/s?wd=?#!
+https://www.baidu.com/s?wd=极客 时间
+https://www.baidu.com/s?wd=极客 '>时 间
+
+### URI 保留字符与非保留字符
+
+- 保留字符
+  - reserved = gen-delims / sub-delims
+    - gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+    - sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+- 非保留字符
+  - unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+    - ALPHA: %41-%5A and %61-%7A
+    - DIGIT: %30-%39
+    - -: %2D
+    - .: %2E
+    - _: %5F
+    - ~: %7E，某些实现将其认为保留字符
+
+### URI 百分号编码
+
+- 百分号编码的方式
+  - pct-encoded = "%" HEXDIG HEXDIG
+    - US-ASCII: 128 个字符(95个可显示字符，33个不可显示字符)
+    - 参见: https://zh.wikipedia.org/wiki/ASCII
+  - 对于 HEXDIG 十六进制中的字母，大小写等价
+- 非 ASCII 字符（例如中文）：建议先 UTF8 编码，再 US-ASCII 编码
+- 对 URI 合法字符，编码与不编码是等价的
+  - 例如，"URI 转换" 既可以"URI%20%E8%BD%AC%E6%8D%A2"，也可以"%55%52%49%20%E8%BD%AC%E6%8D%A2"
+    - https://www.baidu.com/s?wd=URI%20%E8%BD%AC%E6%8D%A2
+    - https://www.baidu.com/s?wd=%55%52%49%20%E8%BD%AC%E6%8D%A2
+
+
+## 详解 HTTP 的请求行
+
+request-line = method SP request-target SP http-version CRLF
+
+![img_13.png](img_13.png)
+
+- method 方法：指明操作目的，动词
+- request-target = origin-form / absolute-form / authority-form / asterisk-form
+  - origin-form = absolute-path [ "?" query ]
+    - 想 origin server 发起的请求，path 为空时必须传递 /
+  - absolute-form = absolute-URI
+    - 仅用于向正向代理 proxy 发起请求时，详见正向代理与隧道
+  - authority-form = authority
+    - 仅用于 CONNECT 方法，例如 CONNECT www.example.com:80 HTTP/1.1
+  - asterisk-form = "*"
+    - 仅用于 OPTIONS 方法
+
+### 常见方法 (RFC7231)
+
+- GET: 主要的获取信息方法，大量的性能优化都针对该方法，幂等方法
+- HEAD: 类似 GET 方法，但服务器不发送 BODY，用以获取 HEAD 元数据，幂等方法
+- POST: 常用于提交 HTML Form 表单、新增资源等
+- PUT: 更新资源，带条件时是幂等方法
+- DELETE: 删除资源，幂等方法
+- CONNECT: 建立 tunnel 隧道
+- OPTIONS: 显示服务器对访问资源支持的方法，幂等方法
+- TRACE: 回显服务器收到的请求，用于定位问题。有安全风险
+
+### 用于文档管理的 WEBDAV 方法 (RFC2518)
+
+- PROPFIND: 从 Web 资源中检索以 XML 格式存储的属性。它也被重载，以允许一个检索远程系统的集合结构（也叫目录层次结构）
+- PROPPATCH: 在单个原子性动作中更改和删除资源的多个属性
+- MKCOL: 创建集合或者目录
+- COPY: 将资源从一个 URI 复制到另一个 URI
+- MOVE: 将资源从一个 URI 移动到另一个 URI
+- LOCK: 锁定一个资源。WebDAV 支持共享锁和互斥锁
+- UNLOCK: 解除资源的锁定
+
+
+## HTTP 的响应码
+
+status-line = HTTP-version SP status-code SP reason-phrase CRLF
+
+- status-code = 3*DIGIT
+- reason-phrase = *( HTAB / SP / VCHAR / obs-text )
+
+![img_14.png](img_14.png)
+
+### 响应码分类：1xx
+
+响应码规范: RFC6585(2012.4)、RFC7231(2014.6)
+
+- 1xx: 请求已接收到，需要进一步处理才能完成，HTTP/1.0 不支持
+  - 100 Continue: 上传大文件前使用
+    - 由客户端发起请求中携带 Expect: 100-continue 头部触发
+  - 101 Switch Protocols: 协议升级使用
+    - 由客户端发起请求中携带 Upgrade: 头部触发，如升级 websocket 或者 http/2.0
+  - 102 Processing: WebDAV 请求可能包含许多涉及文件操作的子请求，需要很长时间才能完成请求。该代码表示服务器已经收到并正在处理请求，但无响应可用。这样可以防止客户端超时，并假设请求丢失
+
+### 响应码分类: 2xx
+
+- 2xx: 成功处理请求
+  - 200 OK: 成功返回响应
+  - 201 Created: 有新资源在服务器端被成功创建
+  - 202 Accepted: 服务器接收并开始处理请求，但请求未处理完成。这样一个模糊的概念是有意如此设计，可以覆盖更多的场景。例如异步、需要长时间处理的任务。
+  - 203 Non-Authoritative Information: 当代理服务器修改了 origin server 的原始响应包体时(例如更换了 HTML 中的元素值)，代理服务器可以通过修改200为203的方式告知客户端这一事实，方便客户端为这一行为做出相应的处理。203相应可以被缓存。
+  - 204 No Content: 成功执行了请求且不携带响应包体，并暗示客户端无需更新当前的页面视图。
+  - 205 Reset Content: 成功执行了请求且不携带响应包体，同时指明客户端需要更新当前页面视图。
+  - 206 Partial Content: 使用 range 协议时返回部分响应内容时的响应码
+  - 207 Multi-Status: RFC4918，在 WebDAV 协议中以 XML 返回多个资源的状态。
+  - 208 Already Reported: RFC5842，为避免相同集合下资源在207响应码下重复上报，使用208可以使用父集合的响应码
+
+### 响应码分类: 3xx
+
+- 3xx: 重定向使用 Location 指向的资源或者缓存中的资源。在 RFC2068 中规定客户端重定向次数不应超过5次，以防止死循环。
+  - 300 Multiple Choices: 资源有多种表述，通过300返回给客户端后由其自行选择访问哪一种表述。
+  - 301 Moved Permanently: 资源永久性的重定向到另一个 URI 中
+  - 302 Found: 资源临时的重定向到另一个 URI 中
+  - 303 See Other: 重定向到其他资源，常用于 POST/PUT 等方法的响应中
+  - 304 Not Modified: 当客户端拥有可能过期的缓存时，会携带缓存的标识etag、时间等信息询问服务器缓存是否仍可复用，而304是告诉客户端可以复用缓存
+  - 307 Temporary Redirect: 类似302，但明确重定向后请求方法必须与原请求方法相同，不得改变
+  - 308 Permanent Redirect: 类似301，但明确重定向后请求方法必须与原请求方法相同，不得改变
+
+### 响应码分类: 4xx
+
+- 4xx: 客户端出现错误
+  - 400 Bad Request: 服务器认为客户端出现了错误，但不能明确判断为以下哪种错误时使用此错误码。例如 HTTP 请求格式错误
+  - 401 Unauthorized: 用户认证信息缺失或者不正确，导致服务器无法处理请求
+  - 403 Forbidden: 服务器理解请求的含义，但没有权限执行此请求
+  - 404 Not Found: 服务器没有找到对应的资源
+  - 405 Method Not Allowed: 服务器不支持请求行中的 method 方法
+  - 406 Not Acceptable: 对客户端指定的资源表述不存在（例如对语言或者编码有要求），服务器返回表述列表供客户端选择
+  - 407 Proxy Authentication Required: 对需要经由代理的请求，认证信息未通过代理服务器的验证
+  - 408 Request Timeout: 服务器接收请求超时
+  - 409 Conflict: 资源冲突，例如上传文件时目标位置已经存在版本更新的资源
+  - 410 Gone: 服务器没有找到对应的资源，且明确的知道该位置永久性找不到该资源
+  - 411 Length Required: 如果请求含有包体且未携带 Content-Length 头部，且不属于 chunk 类请求时，返回411
+  - 412 Precondition Failed: 复用缓存时传递的 If-Unmodified-Since 或 If-None-Match 头部不被满足
+  - 413 Payload Too Large/Request Entity Too Large: 请求的包体超出服务器能处理的最大长度
+  - 414 URI Too Long: 请求的 URI 超出服务器能接受的最大长度
+  - 415 Unsupported Media Type: 上传的文件类型不被服务器支持
+  - 416 Range Not Satisfiable: 无法提供 Range 请求中指定的那段包体
+  - 417 Expectation Failed: 对应 Expect 请求头部期待的情况无法满足时的响应码
+  - 421 Misdirected Request: 服务器认为这个请求不该发给它，因为它没有能力处理
+  - 426 Upgrade Required: 服务器拒绝基于当前 HTTP 协议提供服务，通过 Upgrade 头部告知客户端必须升级协议才能继续处理
+  - 428 Precondition Required: 用户请求中缺失了条件类头部，例如 If-Match
+  - 429 Too Many Requests: 客户端发送请求的速率过快
+  - 431 Request Header Fields Too Large: 请求的 HEADER 头部大小超过限制
+  - 451 Unavailable For Legal Reasons: RFC7725, 由于法律原因资源不可访问
+
+### 响应码分类: 5xx
+
+- 5xx: 服务器端出现错误
+  - 500 Internal Server Error: 服务器内部错误，且不属于一下错误类型
+  - 501 Not Implemented: 服务器不支持实现请求所需要的功能
+  - 502 Bad Gateway: 代理服务器无法获取到合法响应
+  - 503 Service Unavailable: 服务器资源尚未准备好处理当前请求
+  - 504 Gateway Timeout: 代理服务器无法及时的从上游获得响应
+  - 505 HTTP Version Not Supported: 请求使用的 HTTP 协议版本不支持
+  - 507 Insufficient Storage: 服务器没有足够的空间处理请求
+  - 508 Loop Detected: 访问资源时检测到循环
+  - 511 Network Authentication Required: 代理服务器发现客户端需要进行身份验证才能获得网络访问权限
+
