@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multipart</title>
+</head>
+<body>
+<p>POST 方法以 multipart/form-data 编码方式提交，且上传文件</p>
+<form action="/" method="post" enctype="multipart/form-data">
+    <p>
+        <label for="name">姓名：</label>
+        <input id="name" type="text" name="name">
+    </p>
+    <p>
+        <label>性别：</label>
+        <input type="radio" name="sex" value="male" checked>男
+        <input type="radio" name="sex" value="female">女
+    </p>
+    <p>
+        <label>要上传的文件1</label>
+        <input type="file" name="file1">
+    </p>
+    <p>
+        <label>要上传的文件2</label>
+        <input type="file" name="file2">
+    </p>
+    <p>
+        <input type="submit" value="提交">
+    </p>
+</form>
+</body>
+</html>

@@ -884,3 +884,56 @@ https://www.iana.org/assignments/media-types/media-types.xhtml
     - 例如: Content-Disposition: attachment; filename="filename.jpg"
   - 在 multipart/form-date 类型应答中，可以用于子消息体部分
     - 如: Content-Disposition: form-data; name="fieldName";filename="filename.jpg"
+
+
+## HTML Form 表单提交时的协议格式
+
+### HTML FORM 表单
+
+- HTML: HyperText Markup Language, 结构化的标记语言(非编程语言)
+  - 浏览器可以将 HTML 文件渲染为可视化网页
+- FORM 表单: HTML 中的元素，提供了交互控制元件用来向服务器通过 HTTP 协议提交信息，常见控件有:
+  - Text Input Controls: 文本输入控件
+  - CheckBox Controls: 复选框控件
+  - RadioBox Controls: 单选按钮控件
+  - SelectBox Controls: 下拉列表控件
+  - File Select boxes: 选取文件控件
+  - Clickable Buttons: 可点击的按钮控件
+  - *Submit* and Reset Button: 提交或者重置按钮控件
+
+### HTML FORM 表单提交请求时的关键属性
+
+- action: 提交时发起 HTTP 请求的 URI
+- method: 提交时发起 HTTP 请求的 http 方法
+  - GET: 通过 URI,将表单数据以 *URI 参数*的方式提交
+  - POST: 将表单数据放在请求包体中提交
+- enctype: 在 POST 方法下，对表单内容在请求包体中的编码方式
+  - application/x-www-form-urlencoded
+    - 数据被编码成以 '&' 分隔的键-值对，同时以 '=' 分隔键和值，字符以 URL 编码方式编码
+  - multipart/form-data
+    - boundary 分隔符
+    - 每部分表述皆有 HTTP 头部描述子包体，例如 Content-Type
+    - last boundary 结尾
+
+### Multipart(RFC1521): 一个包体中多个资源表述
+
+- Content-Type 头部指明这是一个多表述包体
+  - Content-Type: multipart/form-data; boundary=----WebKitFormBoundary6qqsrucPTftvXEzn
+- Boundary 分隔符的格式
+  - boundary = 0*69<bchars> bcharsnospace
+    - bchars = bcharsnospace / " "
+    - bcharsnospace = DIGIT / ALPHA / "'" / "(" / ")" / "+" / "_" / "," / "-" / "." / "/" / ":" / "=" / "?"
+
+### Multipart 包体格式(RFC822)
+
+- multipart-body = preamble 1*encapsulation close-delimiter epilogue
+  - preamble = discard-text
+  - epilogue = discard-text
+    - discard-text = *( *text CRLF )
+  - 每部分包体格式: encapsulation = delimiter body-part CRLF
+    - delimiter = "--" boundary CRLF
+    - body-part = fields *( CRLF *text )
+      - field = field-name ":" [ field-value ] CRLF
+        - content-disposition: form-data; name="xxx"
+        - content-type 头部指明该部分包体的类型
+  - close-delimiter = "--" boundary "--" CRLF
