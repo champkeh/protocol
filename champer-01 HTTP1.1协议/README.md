@@ -937,3 +937,84 @@ https://www.iana.org/assignments/media-types/media-types.xhtml
         - content-disposition: form-data; name="xxx"
         - content-type 头部指明该部分包体的类型
   - close-delimiter = "--" boundary "--" CRLF
+
+
+## 断点续传与多线程下载是如何做到的？
+
+### 多线程、断点续传、随机点播等场景的步骤
+
+1. 客户端明确任务：从哪开始下载
+   - 本地是否已有部分文件
+     - 文件已下载部分在服务器端是否发生改变
+   - 使用几个线程并发下载
+2. 下载文件的指定部分内容
+3. 下载完毕后拼装成统一的文件
+
+### HTTP Range 规范(RFC7233)
+
+- 允许服务器基于客户端的请求只发送响应包体的一部分给到客户端，而客户端自动将多个片段的包体组合成完整的体积更大的包体
+  - 支持断点续传
+  - 支持多线程下载
+  - 支持视频播放器实时拖动
+- 服务器通过 Accept-Ranges 头部表示是否支持 Range 请求
+  - Accept-Ranges = acceptable-ranges
+  - 例如:
+    - Accept-Ranges: bytes 支持
+    - Accept-Ranges: none 不支持
+
+### Range 请求范围的单位
+
+基于字节，设包体总长度为 10000
+
+- 第 1 个 500 字节：bytes=0-499
+- 第 2 个 500 字节：
+  - bytes=500-599
+  - bytes=500-600,601-999
+  - bytes=500-700,601-999
+- 最后 1 个 500 字节：
+  - bytes=-500
+  - bytes=9500-
+- 仅要第 1 个和最后 1 个字节：bytes=0-0,-1
+
+通过 Range 头部传递请求范围，如 Range: bytes=0-499
+
+### Range 条件请求
+
+- 如果客户端已经得到了 Range 响应的一部分，并想在这部分响应未过期的情况下，获取其他部分的响应
+  - 常与 If-Unmodified-Since 或者 If-Match 头部共同使用
+- If-Range = entity-tag / HTTP-date
+  - 可以使用 Etag 或者 Last-Modified
+
+### 服务器响应
+
+206 Partial Content
+
+- Content-Range 头部：显示当前片段包体在完整包体中的位置
+- Content-Range = byte-content-range / other-content-range
+  - byte-content-range = bytes-unit SP ( byte-range-resp / unsatisfied-range )
+    - byte-range-resp = byte-range "/" ( complete-length / "*" )
+      - complete-length = 1*DIGIT
+        - 完整资源的大小，如果未知则用 * 替代
+      - byte-range = first-byte-pos "-" last-byte-pos
+- 例如
+  - Content-Range: bytes 42-1233/1234
+  - Content-Range: bytes 42-1233/*
+
+416 Range Not Satisfiable
+
+- 请求范围不满足实际资源的大小，其中 Content-Range 中的 complete-length 显示完整响应的长度，例如
+  - Content-Range: bytes */1234
+
+200 OK
+
+- 服务器不支持 Range 请求时，则以 200 返回完整的响应包体
+
+### 多重范围与 multipart
+
+- 请求
+  - Range: bytes=0-50,100-150
+- 响应
+  - Content-Type: multipart/byteranges; boundary=...
+
+![img_23.png](img_23.png)
+
