@@ -1341,3 +1341,237 @@ if_match解读：客户端对服务器说，如果你的本地该资源的指纹
 对于多线程下载场景来说：
 if_unmodified_since解读：客户端对服务器说，如果你的本地该资源的最后修改时间等于或小于我给你的这个时间，才需要206响应我要求的range范围的字节内容，否则200响应完整的文件给我。
 if_match解读：客户端对服务器说，如果你的本地该资源的指纹和我的匹配，才需要206响应我要求的range范围的字节内容，否则200响应我完整的文件给我。
+
+
+## 缓存的工作原理
+
+### HTTP 缓存：为当前请求复用之前请求的响应
+
+- 目标：减少时延；降低带宽消耗
+- 可选而又必要
+
+![img_42.png](img_42.png)
+
+如果缓存没有过期
+
+![img_43.png](img_43.png)
+
+如果缓存过期，则继续从服务器验证
+
+![img_44.png](img_44.png)
+
+### 私有缓存与共享缓存
+
+- 私有缓存：仅供一个用户使用的缓存，通常只存在于如浏览器这样的客户端上
+- 共享缓存：可以供多个用户的缓存，存在于网络中负责转发消息的代理服务器上(对热点资源常使用共享缓存，以减轻源服务器的压力，并提升网络效率)
+  - Authentication 响应不可被代理服务器缓存
+  - 正向代理
+  - 反向代理
+
+### 过期的共享缓存——代理服务器
+
+![img_45.png](img_45.png)
+
+### 缓存实现示意图
+
+![img_46.png](img_46.png)
+
+### 评论内容
+
+Q: 缓存有的来自 from disk cache，有的来自 from memory cache, 这个是怎么区分的？
+A: 这个比较复杂，根据资源类型、隐私策略、各浏览器的设计哲学等而定。比如 Chrome 官方文档曾这么说过：
+Chrome employs two caches — an on-disk cache and a very fast in-memory cache. The lifetime of an in-memory cache is attached to the lifetime of a render process, which roughly corresponds to a tab. Requests that are answered from the in-memory cache are invisible to the web request API. If a request handler changes its behavior (for example, the behavior according to which requests are blocked), a simple page refresh might not respect this changed behavior. To make sure the behavior change goes through, call handlerBehaviorChanged() to flush the in-memory cache. But don't do it often; flushing the cache is a very expensive operation. You don't need to call handlerBehaviorChanged() after registering or unregistering an event listener.
+
+
+## 缓存新鲜度的四种计算方式
+
+### 判断缓存是否过期
+
+- response_is_fresh = ( freshness_lifetime > current_age )
+  - freshness_lifetime: 按优先级，取以下响应头部的值
+    - s-maxage > max-age > Expires > 预估过期时间
+      - 例如：
+        - Cache-Control: s-maxage=3600
+        - Cache-Control: max-age=86400
+        - Expires: Fri, 03 May 2019 03:15:20 GMT
+          - Expires = HTTP-date，指明缓存的绝对过期时间
+
+### 常见的预估过期时间
+
+![img_47.png](img_47.png)
+
+### Age 头部及 current_age 的计算
+
+- Age 表示自源服务器发出响应(或者验证过期缓存)，到使用缓存的响应发出时经过的秒数
+  - 对于代理服务器管理的共享缓存，客户端可以根据 Age 头部判断缓存时间
+  - Age = delta-seconds
+- current_age 计算: current_age = corrected_initial_age + resident_time
+  - resident_time = now - response_time(接收到响应的时间)
+  - corrected_initial_age = max( apparent_age, corrected_age_value )
+    - apparent_age = max( 0, response_time - date_value )
+    - corrected_age_value = age_value + response_delay
+      - response_delay = response_time - request_time(发起请求的时间)
+
+### 代理服务器缓存中的 Age 头部
+
+![img_48.png](img_48.png)
+
+
+## 复杂的 Cache-Control 头部
+
+### Cache-Control 定义
+
+- Cache-Control = 1#cache-directive
+  - cache-directive = token [ "=" ( token / quoted-string ) ]
+    - delta-seconds = 1*DIGIT
+      - RFC 规范中的要求是，至少能支持到 2147483648(2^31)
+- 请求中的头部：
+  - max-age、max-stale、min-fresh (对应上面的token，后面可以带 delta-seconds)
+  - no-cache、no-store、no-transform、only-if-cached
+- 响应中的头部：
+  - max-age、s-maxage (对应上面的 token，后面可以带 delta-seconds)
+  - must-revalidate、proxy-revalidate、no-store、no-transform、public
+  - no-cache、private （对应上面的 quoted-string）
+
+![img_49.png](img_49.png)
+
+### Cache-Control 头部在请求中的值
+
+- max-age: 告诉服务器，客户端不会接受 Age 超出 max-age 秒的缓存
+- max-stale: 告诉服务器，即使缓存不再新鲜，但陈旧秒数没有超出 max-stale 时，客户端仍打算使用。若 max-stale 后没有值，则表示无论过期多久客户端都可使用
+- min-fresh: 告诉服务器，Age 至少经过 min-fresh 秒后缓存才可使用
+- no-cache: 告诉服务器，不能直接使用已有缓存作为响应返回，除非带着缓存条件到上游服务端得到 304 验证返回码才可使用现有缓存
+- no-store: 告诉各代理服务器，不要对该请求的响应缓存（实际有不少不遵守该规定的代理服务器）
+- no-transform: 告诉代理服务器，不要修改消息包体的内容
+- only-if-cached: 告诉服务器，仅能返回缓存的响应，否则若没有缓存则返回 504 错误码
+
+### Cache-Control 头部在响应中的值
+
+- must-revalidate: 告诉客户端，一旦缓存过期，必须向服务器验证后才可使用
+- proxy-revalidate: 与 must-revalidate 类似，但它仅对代理服务器的共享缓存有效
+- no-cache: 告诉客户端，不能直接使用缓存的响应，使用前必须在源服务器验证得到 304 返回码。如果 no-cache 后指定头部，则若客户端的后续请求及响应中不含有这些头，则可直接使用缓存
+- max-age: 告诉客户端，缓存 Age 超出 max-age 秒后则缓存过期
+- s-maxage: 与 max-age 相似，但仅针对共享缓存，且优先级高于 max-age 和 Expires
+- public: 表示无论私有缓存或者共享缓存，皆可将该响应缓存
+- private: 表示该响应不能被代理服务器作为共享缓存使用。若 private 后指定头部，则在告诉代理服务器，不能缓存指定的头部，但可缓存其他部分
+- no-store: 告诉所有下游节点，不能对响应进行缓存
+- no-transform: 告诉代理服务器，不能修改消息包体的内容
+
+
+## 什么样的响应才会被缓存？RFC7234
+
+- 请求方法可以被缓存理解 (不只是 GET 方法)
+- 响应码可以被缓存理解 (404、206 也可以被缓存)
+- 响应与请求的头部没有指明 no-store
+- 响应中至少应含有以下头部中的 1 个或者多个：
+  - Expires、max-age、s-maxage、public
+  - 当响应中没有明确指示过期时间的头部时，如果响应码非常明确，也可以缓存
+- 如果缓存在代理服务器上
+  - 不含有 private
+  - 不含有 Authorization
+
+### 其他响应头部
+
+- Pragma = 1#pragma-directive
+  - pragma-directive = "no-cache" / extension-pragma
+    - extension-pragma = token [ "=" ( token / quoted-string ) ]
+  - Pragma: no-cache 与 Cache-Control: no-cache 意义相同
+
+### 使用缓存作为当前请求响应的条件
+
+- URI 是匹配的
+  - URI 作为主要的缓存关键字，当一个 URI 同时对应多份缓存时，选择日期最近的缓存
+  - 例如，Nginx 中默认的缓存关键字：proxy_cache_key = $scheme$proxy_host$request_uri
+- 缓存中的响应允许当前请求的方法使用缓存
+- 缓存中的响应 Vary 头部指定的头部必须与请求中的头部想匹配：
+  - Vary = "*" / 1#field-name
+    - Vary: * 意味着一定匹配失败
+- 当前请求以及缓存中的响应都不包含 no-cache 头部 (Pragma: no-cache 或者 Cache-Control: no-cache)
+- 缓存中的响应必须是以下三者之一：
+  - 新鲜的（时间上未过期）
+  - 缓存中的响应头部明确告知可以使用过期的响应（如 Cache-Control: max-stale=60）
+  - 使用条件请求去服务器端验证请求是否过期，得到 304 响应
+
+### Vary 缓存
+
+![img_50.png](img_50.png)
+
+### 如何缓存更新频率不同的资源
+
+![img_51.png](img_51.png)
+![img_52.png](img_52.png)
+
+### Warning 头部：对响应码进行补充（缓存或包体转换）
+
+- Warning = 1#warning-value
+  - warning-value = warn-code SP warn-agent SP warn-text [ SP warn-date ]
+    - warn-code = 3DIGIT
+    - warn-agent = ( uri-host [ ":" port ] ) / pseudonym
+    - warn-text = quoted-string
+    - warn-date = DQUOTE HTTP-date DQUOTE
+- 常见的 warn-code
+  - Warning: 110 - "Response is Stale"
+  - Warning: 111 - "Revalidation Failed"
+  - Warning: 112 - "Disconnected Operation"
+  - Warning: 113 - "Heuristic Expiration"
+  - Warning: 199 - "Miscellaneous Warning"
+  - Warning: 214 - "Transformation Applied"
+  - Warning: 299 - "Miscellaneous Persistent Warning"
+
+### 验证请求与响应
+
+- 验证请求
+  - 若缓存响应中含有 Last-Modified 头部
+    - If-Unmodified-Since
+    - If-Modified-Since
+    - If-Range
+  - 若缓存响应中含有 Etag 头部
+    - If-None-Match
+    - If-Match
+    - If-Range
+
+
+## 多种重定向跳转方式的差异
+
+### 为什么需要 URI 重定向？
+
+- 提交 Form 表单成功后需要显示内容页，怎么办？
+- 站点从 HTTP 迁移到 HTTPS，怎么办？
+- 站点部分 URI 发生了变化，但搜索引擎或者流量入口站点只收录了老的 URI，怎么办？
+- 站点正在维护中，需要给用户展示不一样的内容，怎么办？
+- 站点更换了新域名，怎么办？
+
+### 重定向的流程
+
+- 当浏览器接收到重定向响应码时，需要读取响应头部的 Location 头部的值，获取到新的 URI 再跳转访问该页面
+
+![img_53.png](img_53.png)
+
+Location 头部
+
+- Location = URI-reference (对 201 响应码表示新创建资源的地址)
+  - URI-reference = URI / relative-ref
+    - relative-ref = relative-part [ "?" query ] [ "#" fragment ]
+      - relative-part = "//" authority path-abempty / path-absolute / path-noscheme / path-empty
+
+重定向响应返回码
+
+- 概念
+  - 原请求：接收到重定向响应码的请求这里称为原请求
+  - 重定向请求：浏览器接收到重定向响应码后，会发起新的重定向请求
+- *永久*重定向，表示资源永久性变更到新的 URI
+  - 301 (HTTP/1.0)：重定向请求通常（由于历史原因一些浏览器会把 POST 改为 GET）会*使用 GET 方法*，而不管原请求究竟采用的是什么方法
+  - 308 (HTTP/1.1)：重定向请求必须*使用原请求的方法和包体*发起访问
+- *临时*重定向，表示资源只是临时的变更 URI
+  - 302 (HTTP/1.0)：重定向请求通常会*使用 GET 方法*，而不管原请求究竟采用的是什么方法
+  - 303 (HTTP/1.1)：它并不表示资源变迁，而是用新 URI 的响应表述为原请求服务，重定向请求会*使用 GET 方法*
+    - 例如，表单提交后向用户返回新内容（亦可防止重复提交）
+  - 307 (HTTP/1.1)：重定向请求必须*使用原请求的方法和包体*发起访问
+- 特殊重定向
+  - 300：响应式内容协商中，告知客户端有多种资源表述，要求客户端选择一种自认为合适的表述
+  - 304：服务端验证过期缓存有效后，要求客户端使用该缓存
+
+重定向循环
+
+- 服务器端在生成 Location 重定向 URI 时，在同一条路径上使用了之前的 URI，导致无限循环出现
+- Chrome 浏览器会提示: ERR_TOO_MANY_REDIRECTS
