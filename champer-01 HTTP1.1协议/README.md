@@ -1575,3 +1575,139 @@ Location 头部
 
 - 服务器端在生成 Location 重定向 URI 时，在同一条路径上使用了之前的 URI，导致无限循环出现
 - Chrome 浏览器会提示: ERR_TOO_MANY_REDIRECTS
+
+
+## 如何通过 HTTP 隧道访问被限制的网络
+
+### HTTP Tunnel 隧道
+
+![img_54.png](img_54.png)
+
+用于通过 HTTP 连接传输非 HTTP 协议格式的消息，常用于穿越防火墙
+- 建立隧道后，由于传输的并非 HTTP 消息，因此不再遵循请求/响应模式，已变为双向传输
+
+
+## 网络爬虫的工作原理与应对方式
+
+### 爬虫常见的请求头部
+
+- User-Agent：识别是哪类爬虫
+- From: 提供爬虫机器人管理者的邮箱地址
+- Accept: 告知服务器爬虫对哪些资源类型感兴趣
+- Referer: 相当于包含了当前请求的页面 URI
+
+### robots.txt 告知爬虫哪些内容不应爬取
+
+- Robots exclusion protocol: http://www.robotstxt.org/orig.html
+- robots.txt 文件内容
+  - User-agent: 允许哪些机器人
+  - Disallow: 禁止访问特定目录
+  - Crawl-delay: 访问间隔秒数
+  - Allow: 抵消 Disallow 指令
+  - Sitemap: 指出站点地图的 URI
+
+![img_55.png](img_55.png)
+
+
+## HTTP 协议的基本认证
+
+- RFC7235，一种基本的验证框架，被绝大部分浏览器所支持
+- 明文传输，如果不使用 TLS/SSL 传输，则会有安全问题
+
+![img_56.png](img_56.png)
+
+### 认证请求
+- 在请求中传递认证信息：Authorization = credentials
+  - credentials = auth-scheme [ 1*SP ( token68 / #auth-param ) ]
+    - auth-scheme = token
+    - token68 = 1*( ALPHA / DIGIT / "-" / "." / "_" / "~" / "+" / "/" ) *"="
+    - auth-param = token BWS "=" BWS ( token / quoted-string )
+      - BWS = OWS
+        - OWS = *( SP / HTAB )
+  - 例如: Authorization: Basic ZGQ6ZWU=
+    - 实际 ZGQ6ZWU= 是 dd:ee 的 base64 编码，表示用户名和密码
+- 由代理服务器认证：Proxy-Authorization = credentials
+
+### 认证响应
+- 在响应头部中告知客户端需要认证：WWW-Authenticate = 1#challenge
+  - challenge = auth-scheme [ 1*SP ( token68 / #auth-param ) ]
+    - auth-scheme = token
+    - token68 = 1*( ALPHA / DIGIT / "-" / "." / "_" / "~" / "+" / "/" ) *"="
+    - auth-param = token BWS "=" BWS ( token / quoted-string )
+      - BWS = OWS
+        - OWS = *( SP / HTAB )
+  - 例如：WWW-Authenticate: Basic realm="test auth_basic"
+- 由代理服务器认证：Proxy-Authenticate = 1#challenge
+- 认证响应码
+  - 由源服务器告诉客户端需要传递认证信息：401 Unauthorized
+  - 由代理服务器认证：407 Proxy Authentication Required
+  - 认证失败：403 Forbidden
+
+
+## WireShark 的基本用法
+
+
+## 如何通过 DNS 协议解析域名？
+
+### 什么是 DNS?
+- 一个用于将人类可读的“域名”（例如 www.example.com）与服务器的 IP 地址（例如 116.12.50.183）进行映射的数据库
+- 递归查询
+  - 根域名服务器
+  - 权威域名服务器
+
+![img_57.png](img_57.png)
+
+### DNS 域名结构
+
+![img_58.png](img_58.png)
+
+### 递归查询
+
+![img_59.png](img_59.png)
+
+### DNS 报文：查询与响应
+
+- query: 查询域名
+- response: 返回 IP 地址
+
+![img_60.png](img_60.png)
+
+![img_61.png](img_61.png)
+
+### DNS 报文
+
+![img_62.png](img_62.png)
+
+### Questions 格式
+
+![img_63.png](img_63.png)
+
+- QNAME 编码规则
+  - 以 . 分隔为多段，每段以字节数打头
+    - 单字节，前 2 比特必须为 00，只能表示 2^6-1=63 字节
+  - 在 ASCII 编码每段字符
+  - 以 0 结尾
+
+- QTYPE 常用类型
+
+|值|类型|意义|
+|---|---|---|
+| 1 | A | IPv4地址 |
+| 2 | NS | 权威域名服务器 |
+| 5 | CNAME | 别名 |
+| 15 | MX | 邮件交换 |
+| 16 | TXT | 文本字符串 |
+| 28 | AAAA | IPv6地址 |
+
+- QCLASS: IN 表示 internet
+
+### Answer 格式
+
+![img_64.png](img_64.png)
+
+- NAME: 前 2 比特为 11，接引用 QNAME 偏移
+  - 在 DNS 头部的字符偏移数
+- TTL: Time To Live
+- RDLENGTH: 指明 RDATA 的长度
+- RDATA: 查询值，如 IP 地址，或者别名
+  - 别名遵循 QNAME 编码规则
