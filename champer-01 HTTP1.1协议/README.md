@@ -68,12 +68,9 @@
 
 ### HTTP 协议定义
 
-a *stateless* application-level *request/response* protocol that uses extensible semantics and
-*self-descriptive* message payloads for flexible interaction with network-based *hypertext
-information* system.
+a *stateless* application-level *request/response* protocol that uses extensible semantics and *self-descriptive* message payloads for flexible interaction with network-based *hypertext information* system.
 
-一种*无状态的*、应用层的、以*请求 / 应答*方式运行的协议，它使用可扩展的语义和*自描述*消息格式，与基于网络的*超
-文本信息*系统灵活地互动。
+一种*无状态的*、应用层的、以*请求 / 应答*方式运行的协议，它使用可扩展的语义和*自描述*消息格式，与基于网络的*超文本信息*系统灵活地互动。
 
 ### 推荐书籍
 
@@ -100,24 +97,24 @@ information* system.
 
 ### ABNF 核心规则
 
-|规则|形式定义|意义|
-|---|---|---|
-| ALPHA | %x41-5A / %x61-7A | 大写和小写 ASCII 字母 (A-Z, a-z) |
-| DIGIT | %x30-39 | 数字 (0-9) |
-| HEXDIG | DIGIT / "A" / "B" / "C" / "D" / "E" / "F" | 十六进制数字 (0-9, A-F, a-f) |
-| DQUOTE | %x22 | 双引号 |
-| SP | %x20 | 空格 |
-| HTAB| %x09 | 横向制表符 |
-| WSP | SP / HTAB | 空格或横向制表符 |
-| LWSP | *(WSP / CRLF WSP) | 直线空白 (晚于换行) |
-| VCHAR | %x21-7E | 可见(打印)字符 |
-| CHAR | %x01-7F | 任何7位 US-ASCII 字符，不包括 NUL (%x00) |
-| OCTET | %x00-FF | 8位数据 |
-| CTL | %x00-1F / %x7F | 控制字符 |
-| CR | %x0D | 回车 |
-| LF | %x0A | 换行 |
-| CRLF | CR LF | 互联网标准换行 |
-| BIT | "0" / "1" | 二进制数字 |
+| 规则     | 形式定义                                      | 意义                              |
+|--------|-------------------------------------------|---------------------------------|
+| ALPHA  | %x41-5A / %x61-7A                         | 大写和小写 ASCII 字母 (A-Z, a-z)       |
+| DIGIT  | %x30-39                                   | 数字 (0-9)                        |
+| HEXDIG | DIGIT / "A" / "B" / "C" / "D" / "E" / "F" | 十六进制数字 (0-9, A-F, a-f)          |
+| DQUOTE | %x22                                      | 双引号                             |
+| SP     | %x20                                      | 空格                              |
+| HTAB   | %x09                                      | 横向制表符                           |
+| WSP    | SP / HTAB                                 | 空格或横向制表符                        |
+| LWSP   | *(WSP / CRLF WSP)                         | 直线空白 (晚于换行)                     |
+| VCHAR  | %x21-7E                                   | 可见(打印)字符                        |
+| CHAR   | %x01-7F                                   | 任何7位 US-ASCII 字符，不包括 NUL (%x00) |
+| OCTET  | %x00-FF                                   | 8位数据                            |
+| CTL    | %x00-1F / %x7F                            | 控制字符                            |
+| CR     | %x0D                                      | 回车                              |
+| LF     | %x0A                                      | 换行                              |
+| CRLF   | CR LF                                     | 互联网标准换行                         |
+| BIT    | "0" / "1"                                 | 二进制数字                           |
 
 ### 基于 ABNF 描述的 HTTP 协议格式
 
@@ -371,19 +368,22 @@ https://developers.google.com/web/tools/chrome-devtools/network
 
 ### 请求时间详细分布
 
+https://developer.chrome.com/docs/devtools/network/reference/#timing-explanation
+
 - Queueing: 浏览器在以下情况下对请求排队
   - 存在更高优先级的请求
   - 此源已打开六个 TCP 连接，达到限值，仅适用于 HTTP/1.0 和 HTTP/1.1
   - 浏览器正在短暂分配磁盘缓存中的空间
-- Stalled: 请求可能会因 Queueing 中描述的任何原因而停止
+- Stalled: 请求可能会因 Queueing 中描述的任何原因而暂停
 - DNS Lookup: 浏览器正在解析请求的 IP 地址
+- Initial connection: 浏览器正在建立连接，包括 TCP 握手/重试 以及 SSL 的协商
 - Proxy Negotiation: 浏览器正在与代理服务器协商请求
 - Request sent: 正在发送请求
 - ServiceWorker Preparation: 浏览器正在启动 Service Worker
 - Request to ServiceWorker: 正在将请求发送到 Service Worker
-- Waiting (TTFB): 浏览器正在等待响应的第一个字节。TTFB 表示 Time to First Byte，此时间包括1次往返延迟时间及服务器准备响应所用的时间
-- Content Download: 浏览器正在接收响应
-- Receiving Push: 浏览器正在通过 HTTP/2 服务器推送接收此响应的数据
+- Waiting (TTFB): 浏览器正在等待响应的第一个字节。TTFB 表示 Time to First Byte，此时间包括1次往返延迟时间及服务器生成响应所用的时间
+- Content Download: 浏览器正在接收响应，无论是直接从网络接收，还是从 Service Worker 接收。这个值是读取响应包体所花费的总时间。大于预期值可能表示网络速度慢，或者浏览器正忙于执行其他工作，这会延迟读取响应。
+- Receiving Push: 浏览器正在通过 HTTP/2 的服务器推送接收此响应的数据
 - Reading Push: 浏览器正在读取之前收到的本地数据
 
 

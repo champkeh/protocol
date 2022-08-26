@@ -26,3 +26,7 @@ https://mp.weixin.qq.com/s/Qv7tDIbUruzw9vLtuWyo1Q
 *那么，什么情况下使用 TCP，什么情况下使用 UDP 呢？*
 
 最早的时候，DNS 的 UDP 报文上限大小是 512 字节，所以当某个 response 大小超过 512 (返回信息太多)，DNS 服务就会使用 TCP 协议来传输。后来 DNS 协议扩展了自己的 UDP 协议，DNS client 发出查询请求时，可以指定自己能接收超过 512 字节的 UDP 包，这种情况下，DNS 还是会使用 UDP 协议。
+
+### 中文域名的 DNS 解析
+
+需要先转换为 `punycode` 编码: https://www.punycoder.com
