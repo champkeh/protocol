@@ -466,6 +466,9 @@ https://www.baidu.com/s?wd=极客 '>时 间
 
 ### URI 百分号编码
 
+> RFC-3986: https://datatracker.ietf.org/doc/html/rfc3986#section-2.1  
+> MDN: https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding
+
 - 百分号编码的方式
   - pct-encoded = "%" HEXDIG HEXDIG
     - US-ASCII: 128 个字符(95个可显示字符，33个不可显示字符)
@@ -773,7 +776,7 @@ status-line = HTTP-version SP status-code SP reason-phrase CRLF
 - Proactive 主动式内容协商
   - 指由客户端先在请求头部中提出需要的表述形式，而服务器根据这些请求头部提供特定的 representation 表述
 - Reactive 响应式内容协商
-  - 指服务器返回 300 Multiple Choices 或者 406 Not Acceptable，有客户端选择一种表述 URI 使用
+  - 指服务器返回 300 Multiple Choices 或者 406 Not Acceptable，由客户端选择一种表述 URI 使用
 
 ![img_21.png](img_21.png)
 ![img_22.png](img_22.png)
