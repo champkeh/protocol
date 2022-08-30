@@ -1,0 +1,3 @@
+### Range 请求
+GET http://localhost:3000/webpack.mp4 HTTP/1.1
+Range: bytes=0-4,5-10

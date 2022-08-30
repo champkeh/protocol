@@ -1,0 +1,4 @@
+GET http://localhost:3000/ HTTP/1.1
+Host: www.google.com
+Host: www.baidu.com
+Host: localhost:3000

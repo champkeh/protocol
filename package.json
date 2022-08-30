@@ -1,0 +1,14 @@
+{
+  "name": "protocol",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:champkeh/protocol.git",
+  "author": "champkeh <champion.ge@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node example/http/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
