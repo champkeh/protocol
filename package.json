@@ -6,9 +6,18 @@
   "author": "champkeh <champion.ge@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node example/http/server.js"
+    "start": "node example/http/server.js",
+    "start:site1": "nodemon example/http/cookie/champ.design/server.js",
+    "start:site2": "nodemon example/http/cookie/champis.me/server.js",
+    "start:site3": "nodemon example/http/cookie/blog.champis.me/server.js",
+    "start:site": "npm run start:site1 & npm run start:site2 & npm run start:site3"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "crypto-js": "^4.1.1",
+    "express": "^4.18.1",
+    "mime": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }

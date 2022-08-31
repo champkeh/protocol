@@ -885,7 +885,7 @@ https://www.iana.org/assignments/media-types/media-types.xhtml
   - attachment: 指定浏览器将包体以附件的方式下载
     - 例如: Content-Disposition: attachment
     - 例如: Content-Disposition: attachment; filename="filename.jpg"
-  - 在 multipart/form-date 类型应答中，可以用于子消息体部分
+  - 在 multipart/form-data 类型应答中，可以用于子消息体部分
     - 如: Content-Disposition: form-data; name="fieldName";filename="filename.jpg"
 
 
