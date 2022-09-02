@@ -10,7 +10,8 @@
     "start:site1": "nodemon example/http/cookie/champ.design/server.js",
     "start:site2": "nodemon example/http/cookie/champis.me/server.js",
     "start:site3": "nodemon example/http/cookie/blog.champis.me/server.js",
-    "start:site": "npm run start:site1 & npm run start:site2 & npm run start:site3"
+    "start:site4": "nodemon example/http/cookie/www.champis.me/server.js",
+    "start:site": "npm run start:site1 & npm run start:site2 & npm run start:site3 & npm run start:site4"
   },
   "dependencies": {
     "crypto-js": "^4.1.1",

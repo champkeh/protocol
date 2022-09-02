@@ -16,6 +16,9 @@
 
 由此可知，Site = (scheme, eTLD+1) 二元组。
 
+> 由于 Cookie 并没有记录 Scheme 信息，所以 http 和 https 是共享 Cookie 的，也就是说，http://www.example.com 设置的 Cookie 可以被 https://www.example.com 的请求携带，同理，https://www.example.com 设置的 Cookie 也可以被 http://www.example.com 的请求携带。
+> 重点在于发起请求时是否满足 Same-Site 要求。
+
 ## Origin 的定义
 
 > https://developer.mozilla.org/en-US/docs/Glossary/Origin

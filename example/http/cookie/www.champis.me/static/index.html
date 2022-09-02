@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Champis.me</title>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<h1>Champis.me cookie</h1>
+<a href="/cookie">设置 Cookie</a><br>
+<a href="/prefix-secure">__Secure- 前缀 Cookie</a><br>
+<a href="/prefix-host">__Host- 前缀 Cookie</a>
+
+<button onclick="sendXHR('https://blog.champis.me:3003')">发送 xhr</button>
+
+<p>
+    同站资源
+    <img src="https://champis.me:3002/img.png" alt="">
+</p>
+<p>
+    跨域资源
+    <img src="https://blog.champis.me:3003/img.png" alt="">
+</p>
+<p>
+    跨站资源
+    <img src="https://champ.design:3001/img.png" alt="">
+</p>
+
+<script>
+    function sendXHR(url) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.withCredentials = true
+        xhr.send();
+    }
+</script>
+</body>
+</html>
