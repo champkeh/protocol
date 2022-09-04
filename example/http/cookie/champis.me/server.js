@@ -8,14 +8,15 @@ const app = express()
 
 app.use(express.static(path.resolve(__dirname, 'static')))
 
-app.get('/cookie', (req, res, next) => {
-    res.cookie('champis.me-uid', '123', {
-        httpOnly: true,
-        secure: true,
-        domain: 'champis.me',
-        path: '/',
-        sameSite: 'strict',
-    })
+app.get('/abc/def/cookie', (req, res, next) => {
+    // res.cookie('champis.me-uid', '123', {
+    //     httpOnly: true,
+    //     secure: true,
+    //     domain: 'champis.me',
+    //     // path: '/',
+    //     sameSite: 'strict',
+    // })
+    res.setHeader('Set-Cookie', 'champis.me-uid=123; Domain=champis.me; HttpOnly; Secure; SameSite=Strict')
     res.send('<a href="/">回首页</a>')
     res.end()
 })
@@ -42,5 +43,5 @@ https.createServer({
     key: fs.readFileSync(path.resolve(__dirname, '../cert/champis.me-key.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, '../cert/champis.me.pem')),
 }, app).listen(port, () => {
-    console.log(`server running at http://localhost:${port}`)
+    console.log(`server running at https://champis.me:${port}`)
 })

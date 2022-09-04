@@ -37,5 +37,5 @@ app.get('/prefix-host', (req, res, next) => {
 })
 
 app.listen(port, () => {
-    console.log(`server running at http://localhost:${port}`)
+    console.log(`server running at http://www.champis.me:${port}`)
 })

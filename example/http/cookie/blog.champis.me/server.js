@@ -41,5 +41,5 @@ https.createServer({
     key: fs.readFileSync(path.resolve(__dirname, '../cert/blog.champis.me-key.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, '../cert/blog.champis.me.pem')),
 }, app).listen(port, () => {
-    console.log(`server running at http://localhost:${port}`)
+    console.log(`server running at https://blog.champis.me:${port}`)
 })

@@ -48,5 +48,5 @@ https.createServer({
     key: fs.readFileSync(path.resolve(__dirname, '../cert/champ.design-key.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, '../cert/champ.design.pem')),
 }, app).listen(port, () => {
-    console.log(`server running at http://localhost:${port}`)
+    console.log(`server running at https://champ.design:${port}`)
 })
