@@ -11,7 +11,7 @@ https://httpwg.org/specs/
 - 从文本为主的内容，到富媒体（如图片、声音、视频）为主的内容
 - 对页面内容实时性高要求的应用越来越多
 
-![img.png](img.png)
+![img.png](assets/img.png)
 
 ### HTTP/1.1 的高延迟问题
 
@@ -20,14 +20,14 @@ https://httpwg.org/specs/
   - 并发连接有限
   - 同一连接同时只能在完成一个 HTTP 事务 (请求/响应) 才能处理下一个事务
 
-![img_1.png](img_1.png)
+![img_1.png](assets/img_1.png)
 
 高延时 vs 高带宽
 
 - 单连接上的串行请求
 - 无状态导致的高传输量 (低网络效率)
 
-![img_2.png](img_2.png)
+![img_2.png](assets/img_2.png)
 
 无状态特性带来的巨大 HTTP 头部
 
@@ -42,7 +42,7 @@ https://httpwg.org/specs/
 
 ### HTTP/1.1 不支持服务器推送消息
 
-![img_3.png](img_3.png)
+![img_3.png](assets/img_3.png)
 
 
 ## HTTP/2 特性概述
@@ -57,11 +57,11 @@ https://httpwg.org/specs/
   - 使用 http/1.x 的客户端和服务器可以无缝的通过代理方式转接到 http/2 上
   - 不识别 http/2 的代理服务器可以将请求降级到 http/1.x
 
-![img_4.png](img_4.png)
+![img_4.png](assets/img_4.png)
 
 多路复用带来的提升
 
-![img_5.png](img_5.png)
+![img_5.png](assets/img_5.png)
 
 ### HTTP/2 的演示
 
@@ -84,7 +84,7 @@ https://http2.akamai.com/demo
 
 常见加密套件
 
-![img_6.png](img_6.png)
+![img_6.png](assets/img_6.png)
 
 对称加密算法：AES_128_GCM
 每次建立连接后，加密密钥都不一样
@@ -117,7 +117,7 @@ open /Applications/Google\ Chrome.app  # 打开 Chrome 浏览器
 TLS/SSL 降低了可见性门槛
 代理服务器没有私钥不能看到内容
 
-![img_7.png](img_7.png)
+![img_7.png](assets/img_7.png)
 
 
 ## h2c: 在 TCP 上从 HTTP/1 升级到 HTTP/2
@@ -133,7 +133,7 @@ TLS/SSL 降低了可见性门槛
 
 ### h2 与 h2c
 
-![img_8.png](img_8.png)
+![img_8.png](assets/img_8.png)
 
 ### H2C: 不使用 TLS 协议进行协议升级
 
@@ -142,8 +142,8 @@ TLS/SSL 降低了可见性门槛
 curl http://nghttp2.org --http2 -v
 ```
 
-![img_9.png](img_9.png)
-![img_10.png](img_10.png)
+![img_9.png](assets/img_9.png)
+![img_10.png](assets/img_10.png)
 
 ### H2C: 客户端发送的 Magic 帧
 
@@ -158,15 +158,15 @@ curl http://nghttp2.org --http2 -v
 
 ### 统一的连接过程
 
-![img_11.png](img_11.png)
+![img_11.png](assets/img_11.png)
 
 
 ## h2: 在 TLS 上从 HTTP/1 升级到 HTTP/2
 
-![img_12.png](img_12.png)
+![img_12.png](assets/img_12.png)
 
-![img_13.png](img_13.png)
-![img_14.png](img_14.png)
+![img_13.png](assets/img_13.png)
+![img_14.png](assets/img_14.png)
 
 
 
@@ -179,30 +179,30 @@ curl http://nghttp2.org --http2 -v
 - 消息 Message: 对应 HTTP/1 中的请求或者响应，包含一条或者多条 Frame
 - 数据帧 Frame: 最小单位，以二进制压缩格式存放 HTTP/1 中的内容
 
-![img_15.png](img_15.png)
+![img_15.png](assets/img_15.png)
 
 ### Stream、Message、Frame 之间的关系
 
-![img_16.png](img_16.png)
+![img_16.png](assets/img_16.png)
 
 ### 消息的组成: Headers 帧与 Data 帧
 
-![img_17.png](img_17.png)
+![img_17.png](assets/img_17.png)
 
 ### 传输中无序，接收时组装
 
 同一个 Stream 中的 Frame 必须是有序的，跨 Stream 可以无序
 
-![img_18.png](img_18.png)
+![img_18.png](assets/img_18.png)
 
 ### 消息与帧
 
-![img_19.png](img_19.png)
+![img_19.png](assets/img_19.png)
 
 
 ## 帧格式: Stream 流 ID 的作用
 
-![img_20.png](img_20.png)
+![img_20.png](assets/img_20.png)
 
 ### Stream ID 的作用
 
@@ -211,13 +211,13 @@ curl http://nghttp2.org --http2 -v
   - 同一 Stream 内的 Frame 必须是有序的 (无法并发)
   - SETTINGS_MAX_CONCURRENT_STREAMS 控制着并发 Stream 数
 
-![img_21.png](img_21.png)
+![img_21.png](assets/img_21.png)
 
 - 推送依赖性请求的关键
   - 由客户端建立的流必须是奇数
   - 由服务器建立的流必须是偶数
 
-![img_22.png](img_22.png)
+![img_22.png](assets/img_22.png)
 
 - 流状态管理的约束性规定
   - 新建立的流 ID 必须大于曾经建立过的状态为 opened 或者 reserved 的流 ID
@@ -232,7 +232,7 @@ curl http://nghttp2.org --http2 -v
 
 ### 9 字节标准帧头部
 
-![img_23.png](img_23.png)
+![img_23.png](assets/img_23.png)
 
 帧长度 Length
 - 0 至 2^14(16,384) - 1
@@ -261,7 +261,7 @@ curl http://nghttp2.org --http2 -v
 - 设置帧并不是“协商”，而是发送方向接收方通知其特性、能力
 - 一个设置帧可同时设置多个对象
 
-![img_24.png](img_24.png)
+![img_24.png](assets/img_24.png)
 
 - Identifier: 设置对象
 - Value: 设置值
@@ -298,7 +298,7 @@ RFC7541
 
 - 同一个索引空间的 HEADER 表
 
-![img_25.png](img_25.png)
+![img_25.png](assets/img_25.png)
 
 
 ## HPACK 中如何使用 Huffman 树编码？
@@ -329,13 +329,13 @@ RFC7541
 
 ### TCP 以及 TCP+TLS 建立链接握手过多的问题
 
-![img_26.png](img_26.png)
+![img_26.png](assets/img_26.png)
 
 ### 多路复用与 TCP 的对头阻塞问题
 
 - 资源的有序到达
 
-![img_27.png](img_27.png)
+![img_27.png](assets/img_27.png)
 
 ### TCP 的问题
 
@@ -343,7 +343,7 @@ RFC7541
 
 ### QUIC 协议在哪一层？
 
-![img_28.png](img_28.png)
+![img_28.png](assets/img_28.png)
 
 ### 使 Chrome 支持 QUIC
 
@@ -352,28 +352,28 @@ chrome://flags/#enable-quic
 
 ## HTTP/3: QUIC 协议格式
 
-![img_29.png](img_29.png)
+![img_29.png](assets/img_29.png)
 
 ### HTTP3 的连接迁移
 
 允许客户端更换 IP 地址、端口后，仍然可以复用前连接
 
-![img_30.png](img_30.png)
+![img_30.png](assets/img_30.png)
 
 ### 解决了对头阻塞问题的 HTTP3
 
 - UDP 报文: 先天没有队列概念
 
-![img_31.png](img_31.png)
+![img_31.png](assets/img_31.png)
 
 ### HTTP3: 1RTT 完全握手
 
-![img_32.png](img_32.png)
+![img_32.png](assets/img_32.png)
 
 ### 会话恢复场景下的 0RTT 握手
 
-![img_33.png](img_33.png)
+![img_33.png](assets/img_33.png)
 
 ### HTTP3: 0RTT 恢复会话握手
 
-![img_34.png](img_34.png)
+![img_34.png](assets/img_34.png)

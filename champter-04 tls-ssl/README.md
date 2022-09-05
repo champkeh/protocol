@@ -10,7 +10,7 @@
 
 ### TLS/SSL 发展
 
-![img.png](img.png)
+![img.png](assets/img.png)
 
 ### TLS 协议
 
@@ -23,13 +23,13 @@
 
 ### TLS 安全密码套件解读
 
-![img_1.png](img_1.png)
+![img_1.png](assets/img_1.png)
 
 ### TLS 握手
 
 在客户端和服务器开始通过 TLS 交换应用程序数据之前，必须先协商一个加密隧道：客户端和服务器必须就 TLS 协议版本达成一致、选择密码套件、并在必要时验证证书。不幸的是，这些步骤都需要在客户端和服务器之间进行新的数据包往返(RTT)，这会增加所有 TLS 连接的启动延迟。
 
-![img_57.png](img_57.png)
+![img_57.png](assets/img_57.png)
 
 #### 0ms
 
@@ -61,17 +61,17 @@ TCP 连接就绪后，客户端以纯文本形式发送大量规范，例如正�
 
 ### 对称加密
 
-![img_2.png](img_2.png)
+![img_2.png](assets/img_2.png)
 
 ### AES 对称加密在网络中的应用
 
-![img_3.png](img_3.png)
+![img_3.png](assets/img_3.png)
 
 ### 对称加密与 XOR 异或运算
 
-![img_5.png](img_5.png)
+![img_5.png](assets/img_5.png)
 
-![img_4.png](img_4.png)
+![img_4.png](assets/img_4.png)
 
 ### 填充 padding
 
@@ -96,17 +96,17 @@ TCP 连接就绪后，客户端以纯文本形式发送大量规范，例如正�
 
 直接将明文分解为多个块，对每个块独立加密
 
-![img_6.png](img_6.png)
+![img_6.png](assets/img_6.png)
 
 问题: 无法隐藏数据特征
 
-![img_7.png](img_7.png)
+![img_7.png](assets/img_7.png)
 
 #### 2. CBC (Cipher-block chaining) 模式
 
 每个明文块先与前一个密文块进行异或后，再进行加密
 
-![img_8.png](img_8.png)
+![img_8.png](assets/img_8.png)
 
 问题: 加密过程串行化
 
@@ -114,23 +114,23 @@ TCP 连接就绪后，客户端以纯文本形式发送大量规范，例如正�
 
 通过递增一个加密计数器以产生连续的密钥流
 
-![img_9.png](img_9.png)
+![img_9.png](assets/img_9.png)
 
 问题: 不能提供密文消息完整性校验
 
 ### 验证完整性: hash 函数
 
-![img_10.png](img_10.png)
+![img_10.png](assets/img_10.png)
 
 ### 验证完整性: MAC (Message Authentication Code)
 
-![img_11.png](img_11.png)
+![img_11.png](assets/img_11.png)
 
 #### 4. GCM 模式
 
 Galois/Counter Mode (CTR + GMAC)
 
-![img_12.png](img_12.png)
+![img_12.png](assets/img_12.png)
 
 ## 详解 AES 对称加密算法
 
@@ -161,7 +161,7 @@ AES 的分组长度是 128 位 (16字节)
 
 ### AES 加密流程
 
-![img_13.png](img_13.png)
+![img_13.png](assets/img_13.png)
 
 C = E(K, P)
 
@@ -183,11 +183,11 @@ E 为每一轮算法，每轮密钥皆不同
 
 矩阵中的每一个字节都与该次回合密钥 (round key) 做 XOR 运算；每个子密钥由密钥生成方案产生。
 
-![img_14.png](img_14.png)
+![img_14.png](assets/img_14.png)
 
 #### 密钥扩展
 
-![img_15.png](img_15.png)
+![img_15.png](assets/img_15.png)
 
 函数 g 步骤:
 - a: 字循环: 左移 1 个字节
@@ -201,7 +201,7 @@ RC={0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36}
 透过一个非线性的替换函数，用查找表的方式把每个字节替换成对应的字节。
 提供非线性变换能力，避免简单代数性质的攻击
 
-![img_16.png](img_16.png)
+![img_16.png](assets/img_16.png)
 
 #### 3. ShiftRows 步骤
 
@@ -209,11 +209,11 @@ RC={0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36}
 
 第一行不变，第二行循环左移 1 个字节，第三行循环左移 2 个字节，第四行循环左移 3 个字节
 
-![img_17.png](img_17.png)
+![img_17.png](assets/img_17.png)
 
 #### 4. MixColumns 步骤
 
-![img_18.png](img_18.png)
+![img_18.png](assets/img_18.png)
 
 ## 非对称密码与 RSA 算法
 
@@ -221,14 +221,14 @@ RC={0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36}
 
 每个参与方都有一对密钥，公钥向对方公开，私钥仅自己使用
 
-![img_19.png](img_19.png)
+![img_19.png](assets/img_19.png)
 
 ### 非对称加解密的过程
 
 加密：使用对方的公钥加密消息
 解密：使用自己的私钥解密消息
 
-![img_20.png](img_20.png)
+![img_20.png](assets/img_20.png)
 
 ### RSA 算法
 
@@ -244,11 +244,11 @@ RC={0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36}
 6. 公钥: (k, n)
 7. 私钥: (d, n)
 
-![img_21.png](img_21.png)
+![img_21.png](assets/img_21.png)
 
 #### RSA 算法加解密流程
 
-![img_22.png](img_22.png)
+![img_22.png](assets/img_22.png)
 
 ## 基于 OpenSSL 实战验证 RSA
 
@@ -260,7 +260,7 @@ RC={0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36}
 openssl genrsa -out private.pem
 ```
 
-![img_23.png](img_23.png)
+![img_23.png](assets/img_23.png)
 
 ### 从私钥中提取出公钥
 
@@ -268,7 +268,7 @@ openssl genrsa -out private.pem
 openssl rsa -in private.pem -pubout -out public.pem
 ```
 
-![img_24.png](img_24.png)
+![img_24.png](assets/img_24.png)
 
 ### 查看 ASN.1 格式的私钥
 
@@ -291,7 +291,7 @@ RSAPrivateKey ::= SEQUENCE {
 openssl asn1parse -i -in private.pem
 ```
 
-![img_25.png](img_25.png)
+![img_25.png](assets/img_25.png)
 
 ### 查看 ASN.1 格式的公钥
 
@@ -299,13 +299,13 @@ openssl asn1parse -i -in private.pem
 openssl asn1parse -i -in public.pem
 ```
 
-![img_26.png](img_26.png)
+![img_26.png](assets/img_26.png)
 
 ```shell
 openssl asn1parse -i -in public.pem -strparse 19
 ```
 
-![img_27.png](img_27.png)
+![img_27.png](assets/img_27.png)
 
 ### 使用 RSA 公私钥加解密
 
@@ -334,27 +334,27 @@ openssl rsautl -decrypt -in hello.en -inkey private.pem -out hello.de
 
 ### 签发证书流程
 
-![img_32.png](img_32.png)
+![img_32.png](assets/img_32.png)
 
 ### 签名与验签流程
 
-![img_33.png](img_33.png)
+![img_33.png](assets/img_33.png)
 
 ### 证书信任链
 
-![img_34.png](img_34.png)
+![img_34.png](assets/img_34.png)
 
 ### PKI 公钥基础设施
 
-![img_35.png](img_35.png)
+![img_35.png](assets/img_35.png)
 
 ### 证书类型
 
-![img_36.png](img_36.png)
+![img_36.png](assets/img_36.png)
 
 ### 验证证书链
 
-![img_37.png](img_37.png)
+![img_37.png](assets/img_37.png)
 
 ## 非对称密码应用: DH 密钥交换协议
 
@@ -362,7 +362,7 @@ openssl rsautl -decrypt -in hello.en -inkey private.pem -out hello.de
 
 由客户端生成对称加密的密钥
 
-![img_28.png](img_28.png)
+![img_28.png](assets/img_28.png)
 
 问题: 没有前向保密性
 
@@ -375,7 +375,7 @@ openssl rsautl -decrypt -in hello.en -inkey private.pem -out hello.de
 
 它可以让双方在完全没有对方任何预先信息的条件下，通过不安全信道创建起一个密钥，具备前向保密性。
 
-![img_29.png](img_29.png)
+![img_29.png](assets/img_29.png)
 
 ### DH 密钥交换协议举例
 
@@ -383,11 +383,11 @@ openssl rsautl -decrypt -in hello.en -inkey private.pem -out hello.de
 - a, b 保密
 - 生成共同密钥 K
 
-![img_30.png](img_30.png)
+![img_30.png](assets/img_30.png)
 
 ### DH 密钥交换协议举例
 
-![img_31.png](img_31.png)
+![img_31.png](assets/img_31.png)
 
 ### DH 密钥交换协议的问题
 
@@ -408,7 +408,7 @@ y^2 = x^3 + ax + b (4a^3 + 27b^2 != 0)
 
 例如，始终关于 X 轴对称 (y平方的存在)
 
-![img_38.png](img_38.png)
+![img_38.png](assets/img_38.png)
 
 ### ECC 曲线的特性: +运算
 
@@ -421,17 +421,17 @@ P + Q = R
 
 +运算满足结合律: (a + b) + c = a + (b + c)
 
-![img_39.png](img_39.png)
+![img_39.png](assets/img_39.png)
 
 ### +运算的代数计算方法
 
 先计算出斜率 m，再计算出 R 点的坐标
 
-![img_40.png](img_40.png)
+![img_40.png](assets/img_40.png)
 
 ### ECC +运算举例
 
-![img_41.png](img_41.png)
+![img_41.png](assets/img_41.png)
 
 ### ECC 的关键原理
 
@@ -440,7 +440,7 @@ Q = K.P
 - 已知 K 与 P，正向计算快速
 - 已知 Q 与 P，计算 K 的逆向运算非常困难
 
-![img_42.png](img_42.png)
+![img_42.png](assets/img_42.png)
 
 ## DH 协议升级: 基于椭圆曲线的 ECDH 协议
 
@@ -450,7 +450,7 @@ ECC (Elliptic Curve Cryptography): 椭圆曲线密码学
 
 魏尔斯特拉斯椭圆函数: y^2 = x^3 + ax + b
 
-![img_43.png](img_43.png)
+![img_43.png](assets/img_43.png)
 
 ### ECDH 的步骤
 
@@ -473,7 +473,7 @@ By^2 = x^3 + Ax^2 + x
 
 如图，A=7, B=3
 
-![img_44.png](img_44.png)
+![img_44.png](assets/img_44.png)
 
 X25519: y^2 = x^3 + 486662x^2 + x
 
@@ -484,7 +484,7 @@ X25519: y^2 = x^3 + 486662x^2 + x
 
 ### TLS1.2 通讯过程
 
-![img_45.png](img_45.png)
+![img_45.png](assets/img_45.png)
 
 ### FREAK 攻击
 
@@ -492,7 +492,7 @@ X25519: y^2 = x^3 + 486662x^2 + x
 - 90 年代引入
   - 512 位以下 RSA 密钥可轻易破解
 
-![img_46.png](img_46.png)
+![img_46.png](assets/img_46.png)
 
 ### openssl 1.1.1 版本对 TLS1.3 的支持情况
 
@@ -511,7 +511,7 @@ https://www.ssllabs.com/ssltest/index.html
 
 ### TLS1.3 中的密钥交换
 
-![img_47.png](img_47.png)
+![img_47.png](assets/img_47.png)
 
 ## 握手的优化: session 缓存、ticket 票据及 TLS1.3 的 0-RTT
 
@@ -519,21 +519,21 @@ https://www.ssllabs.com/ssltest/index.html
 
 Session resume with session ID
 
-![img_48.png](img_48.png)
+![img_48.png](assets/img_48.png)
 
 ### session ticket
 
 Session resume with session ticket
 
-![img_50.png](img_50.png)
+![img_50.png](assets/img_50.png)
 
 ### TLS1.3 的 0-RTT 握手
 
-![img_51.png](img_51.png)
+![img_51.png](assets/img_51.png)
 
 ### 0-RTT 面临的重放攻击
 
-![img_52.png](img_52.png)
+![img_52.png](assets/img_52.png)
 
 ## TLS 与量子通讯的原理
 
@@ -563,7 +563,7 @@ Session resume with session ticket
 - 量子力学: 任何对量子系统的测量都会对系统产生干扰
 - QKD: 如果有第三方试图窃听密码，则通信的双方便会察觉
 
-![img_53.png](img_53.png)
+![img_53.png](assets/img_53.png)
 
 ## 量子通讯 BB84 协议的执行流程
 
@@ -571,14 +571,14 @@ Session resume with session ticket
 
 由 Charles Bennett 与 Gilles Brassard 在 1984 年发表
 
-![img_54.png](img_54.png)
+![img_54.png](assets/img_54.png)
 
 ### BB84 协议示意图
 
 50% * 50% = 25% 的错误率
 
-![img_55.png](img_55.png)
+![img_55.png](assets/img_55.png)
 
 ### QKD 密钥纠错与隐私增强
 
-![img_56.png](img_56.png)
+![img_56.png](assets/img_56.png)

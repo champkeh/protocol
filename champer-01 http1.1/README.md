@@ -64,7 +64,7 @@
 
 ## 浏览器发起 HTTP 请求的典型场景
 
-![img_1.png](img_1.png)
+![img_1.png](assets/img_1.png)
 
 ### HTTP 协议定义
 
@@ -142,10 +142,10 @@ https://www.ietf.org/rfc/rfc5234.txt
 
 
 ### OSI 概念模型
-![img.png](img.png)
+![img.png](assets/img.png)
 
 ### OSI 模型与 TCP/IP 模型对照
-![img_2.png](img_2.png)
+![img_2.png](assets/img_2.png)
 
 分层的优点:
 
@@ -158,7 +158,7 @@ https://www.ietf.org/rfc/rfc5234.txt
 
 网络分层在网络报文中的体现：
 
-![img_3.png](img_3.png)
+![img_3.png](assets/img_3.png)
 
 
 ## HTTP 解决了什么问题？
@@ -169,7 +169,7 @@ https://www.ietf.org/rfc/rfc5234.txt
 
 ### Http 协议为什么是现在这个样子？
 
-![img_4.png](img_4.png)
+![img_4.png](assets/img_4.png)
 
 Form Follows Function(形式一定是为了功能服务的)
 
@@ -224,7 +224,7 @@ HTTP 协议应当在以下属性中取得可接受的均衡：
 
 ### REST 架构下的 Web
 
-![img_5.png](img_5.png)
+![img_5.png](assets/img_5.png)
 
 
 ## 从五种架构风格推导出 HTTP 的 REST 架构
@@ -245,12 +245,12 @@ HTTP 协议应当在以下属性中取得可接受的均衡：
 #### 1. 管道与过滤器 Pipe and Filter, PF
 
 每个 Filter 都有输入端和输出端，只能从输入端读取数据，处理后再从输出端产生数据
-![img_6.png](img_6.png)
+![img_6.png](assets/img_6.png)
 
 #### 2. 统一接口的管道与过滤器 Uniform Pipe and Filter, UPF
 在 PF 上增加了统一接口的约束，所有 Filter 过滤器必须具备同样的接口
 
-![img_7.png](img_7.png)
+![img_7.png](assets/img_7.png)
 
 ### 复制风格 Replication Style
 
@@ -260,9 +260,9 @@ HTTP 协议应当在以下属性中取得可接受的均衡：
 #### 2. 缓存 $
 RR 的变体，通过复制请求的结果，为后续请求复用
 
-![img_8.png](img_8.png)
+![img_8.png](assets/img_8.png)
 
-![img_9.png](img_9.png)
+![img_9.png](assets/img_9.png)
 
 ### 分层风格 Hierarchical Style
 
@@ -287,7 +287,7 @@ RR 的变体，通过复制请求的结果，为后续请求复用
   - 巨大的数据集有可能通过迭代而减少
   - 简单性、可伸缩性差
 
-![img_10.png](img_10.png)
+![img_10.png](assets/img_10.png)
 
 ### 移动代码风格 Mobile Code Style
 
@@ -319,7 +319,7 @@ RR 的变体，通过复制请求的结果，为后续请求复用
 
 ### 风格演化
 
-![img_11.png](img_11.png)
+![img_11.png](assets/img_11.png)
 
 
 ## 使用 Chrome 的 Network 面板分析 HTTP 报文
@@ -406,7 +406,7 @@ https://developer.chrome.com/docs/devtools/network/reference/#timing-explanation
 
 - 组成: schema, user information, host, port, path, query, fragment
 
-![img_12.png](img_12.png)
+![img_12.png](assets/img_12.png)
 
 https://tools.ietf.org/html/rfc7231?test=1#page-7
 
@@ -485,7 +485,7 @@ https://www.baidu.com/s?wd=极客 '>时 间
 
 request-line = method SP request-target SP http-version CRLF
 
-![img_13.png](img_13.png)
+![img_13.png](assets/img_13.png)
 
 - method 方法：指明操作目的，动词
 - request-target = origin-form / absolute-form / authority-form / asterisk-form
@@ -527,7 +527,7 @@ status-line = HTTP-version SP status-code SP reason-phrase CRLF
 - status-code = 3*DIGIT
 - reason-phrase = *( HTAB / SP / VCHAR / obs-text )
 
-![img_14.png](img_14.png)
+![img_14.png](assets/img_14.png)
 
 ### 响应码分类：1xx
 
@@ -609,15 +609,15 @@ status-line = HTTP-version SP status-code SP reason-phrase CRLF
 
 ### HTTP 连接的常见流程(短连接)
 
-![img_15.png](img_15.png)
+![img_15.png](assets/img_15.png)
 
 ### 从 TCP 编程上看 HTTP 请求处理
 
-![img_16.png](img_16.png)
+![img_16.png](assets/img_16.png)
 
 ### 短连接与长连接
 
-![img_17.png](img_17.png)
+![img_17.png](assets/img_17.png)
 
 - Connection 头部
   - Keep-Alive: 长连接
@@ -634,11 +634,11 @@ status-line = HTTP-version SP status-code SP reason-phrase CRLF
 
 如果存在代理服务器的话，Connection 仅针对当前连接有效
 
-![img_18.png](img_18.png)
+![img_18.png](assets/img_18.png)
 
 ### 代理服务器对长连接的支持
 
-![img_19.png](img_19.png)
+![img_19.png](assets/img_19.png)
 
 - 问题：各方间错误使用了长连接
   - 客户端发起长连接
@@ -769,7 +769,7 @@ status-line = HTTP-version SP status-code SP reason-phrase CRLF
 
 每个 URI 指向的资源可以是任何事物，可以有多种不同的表述，例如一份文档可以有不同语言的翻译、不同的媒体格式、可以针对不同的浏览器提供不同的压缩编码等。
 
-![img_20.png](img_20.png)
+![img_20.png](assets/img_20.png)
 
 ### 内容协商的两种方式
 
@@ -778,8 +778,8 @@ status-line = HTTP-version SP status-code SP reason-phrase CRLF
 - Reactive 响应式内容协商
   - 指服务器返回 300 Multiple Choices 或者 406 Not Acceptable，由客户端选择一种表述 URI 使用
 
-![img_21.png](img_21.png)
-![img_22.png](img_22.png)
+![img_21.png](assets/img_21.png)
+![img_22.png](assets/img_22.png)
 
 ### 常见的协商要素
 
@@ -1019,7 +1019,7 @@ https://www.iana.org/assignments/media-types/media-types.xhtml
 - 响应
   - Content-Type: multipart/byteranges; boundary=...
 
-![img_23.png](img_23.png)
+![img_23.png](assets/img_23.png)
 
 
 ## Cookie 的格式与约束
@@ -1081,7 +1081,7 @@ RFC 规范对浏览器使用 Cookie 的要求
 ## Session 及第三方 Cookie 的工作原理
 
 ### 登录场景下 Cookie 与 Session 的常见用法
-![img_24.png](img_24.png)
+![img_24.png](assets/img_24.png)
 
 ### 无状态的 REST 架构 VS 状态管理
 
@@ -1104,7 +1104,7 @@ RFC 规范对浏览器使用 Cookie 的要求
 浏览器允许对于不安全域(跨域)下的资源(如广告图片)响应中的 Set-Cookie 保存，并在后续访问该域时自动使用 Cookie
 
 用户踪迹信息的搜集
-![img_25.png](img_25.png)
+![img_25.png](assets/img_25.png)
 
 
 ## 浏览器为什么要有同源策略？
@@ -1113,7 +1113,7 @@ RFC 规范对浏览器使用 Cookie 的要求
 
 站点 domain-b.com 收到的来自同一浏览器的请求，可能来自于站点 domain-a.com
 
-![img_26.png](img_26.png)
+![img_26.png](assets/img_26.png)
 
 ### 没有同源策略下的 Cookie
 
@@ -1145,14 +1145,14 @@ RFC 规范对浏览器使用 Cookie 的要求
 - AJAX 请求不能发送
 
 跨站请求伪造攻击(CSRF, Cross-Site Request Forgery)
-![img_27.png](img_27.png)
+![img_27.png](assets/img_27.png)
 
 防止 CSRF 攻击的方式
 
 - 检查 Referer 头部
 - 在表单中添加隐藏的有实效的token，服务器在post请求中验证这个token
 
-![img_28.png](img_28.png)
+![img_28.png](assets/img_28.png)
 
 https://en.wikipedia.org/wiki/Cross-site_request_forgery
 
@@ -1178,11 +1178,11 @@ https://en.wikipedia.org/wiki/Cross-site_request_forgery
 - 响应中携带 Access-Control-Allow-Origin 头部表示允许哪些域
 - 浏览器放行
 
-![img_29.png](img_29.png)
+![img_29.png](assets/img_29.png)
 
 ### 预检请求
 
-![img_30.png](img_30.png)
+![img_30.png](assets/img_30.png)
 
 - 预检请求头部
   - Access-Control-Request-Method
@@ -1278,54 +1278,54 @@ https://en.wikipedia.org/wiki/Cross-site_request_forgery
 
 ### 缓存更新：首次缓存
 
-![img_31.png](img_31.png)
+![img_31.png](assets/img_31.png)
 
 ### 缓存更新：基于过期缓存发起条件请求
 
-![img_32.png](img_32.png)
+![img_32.png](assets/img_32.png)
 
 ### 增量更新
 
 当服务器支持 Range 服务时，连接意外中断时已接收到部分数据
 
-![img_33.png](img_33.png)
+![img_33.png](assets/img_33.png)
 
 通过 Range 请求下载其他包体时，加入验证器防止两次下载间资源已发生变更
 
-![img_34.png](img_34.png)
+![img_34.png](assets/img_34.png)
 
 如果两次下载操作中，资源已经发生变化，则服务器用 412 通知客户端，而客户端重新下载完整包体
 
 (有2次访问)
-![img_35.png](img_35.png)
+![img_35.png](assets/img_35.png)
 
 通过 If-Range 头部可以避免 2 次请求交互带来的损耗
 
-![img_36.png](img_36.png)
+![img_36.png](assets/img_36.png)
 
 ### 更新丢失问题
 
 更新资源意味着 2 步操作：先获取资源，再把本地修改后的资源提交
 
-![img_37.png](img_37.png)
+![img_37.png](assets/img_37.png)
 
 2 个客户端并发修改同一资源会导致更新丢失
 
-![img_38.png](img_38.png)
+![img_38.png](assets/img_38.png)
 
 ### 更新丢失问题：乐观锁
 
 只允许第 1 个提交更新的客户端更新资源
 
-![img_39.png](img_39.png)
+![img_39.png](assets/img_39.png)
 
 ### 更新丢失问题：乐观锁解决首次上传问题
 
-![img_40.png](img_40.png)
+![img_40.png](assets/img_40.png)
 
 ### 服务器处理条件请求的常见规则(nginx)
 
-![img_41.png](img_41.png)
+![img_41.png](assets/img_41.png)
 
 ### 关于 If-Match/If-None-Match、If-Modified-Since/If-Unmodified-Since的使用区别
 
@@ -1353,15 +1353,15 @@ if_match解读：客户端对服务器说，如果你的本地该资源的指纹
 - 目标：减少时延；降低带宽消耗
 - 可选而又必要
 
-![img_42.png](img_42.png)
+![img_42.png](assets/img_42.png)
 
 如果缓存没有过期
 
-![img_43.png](img_43.png)
+![img_43.png](assets/img_43.png)
 
 如果缓存过期，则继续从服务器验证
 
-![img_44.png](img_44.png)
+![img_44.png](assets/img_44.png)
 
 ### 私有缓存与共享缓存
 
@@ -1373,11 +1373,11 @@ if_match解读：客户端对服务器说，如果你的本地该资源的指纹
 
 ### 过期的共享缓存——代理服务器
 
-![img_45.png](img_45.png)
+![img_45.png](assets/img_45.png)
 
 ### 缓存实现示意图
 
-![img_46.png](img_46.png)
+![img_46.png](assets/img_46.png)
 
 ### 评论内容
 
@@ -1401,7 +1401,7 @@ Chrome employs two caches — an on-disk cache and a very fast in-memory cache. 
 
 ### 常见的预估过期时间
 
-![img_47.png](img_47.png)
+![img_47.png](assets/img_47.png)
 
 ### Age 头部及 current_age 的计算
 
@@ -1417,7 +1417,7 @@ Chrome employs two caches — an on-disk cache and a very fast in-memory cache. 
 
 ### 代理服务器缓存中的 Age 头部
 
-![img_48.png](img_48.png)
+![img_48.png](assets/img_48.png)
 
 
 ## 复杂的 Cache-Control 头部
@@ -1436,7 +1436,7 @@ Chrome employs two caches — an on-disk cache and a very fast in-memory cache. 
   - must-revalidate、proxy-revalidate、no-store、no-transform、public
   - no-cache、private （对应上面的 quoted-string）
 
-![img_49.png](img_49.png)
+![img_49.png](assets/img_49.png)
 
 ### Cache-Control 头部在请求中的值
 
@@ -1497,12 +1497,12 @@ Chrome employs two caches — an on-disk cache and a very fast in-memory cache. 
 
 ### Vary 缓存
 
-![img_50.png](img_50.png)
+![img_50.png](assets/img_50.png)
 
 ### 如何缓存更新频率不同的资源
 
-![img_51.png](img_51.png)
-![img_52.png](img_52.png)
+![img_51.png](assets/img_51.png)
+![img_52.png](assets/img_52.png)
 
 ### Warning 头部：对响应码进行补充（缓存或包体转换）
 
@@ -1548,7 +1548,7 @@ Chrome employs two caches — an on-disk cache and a very fast in-memory cache. 
 
 - 当浏览器接收到重定向响应码时，需要读取响应头部的 Location 头部的值，获取到新的 URI 再跳转访问该页面
 
-![img_53.png](img_53.png)
+![img_53.png](assets/img_53.png)
 
 Location 头部
 
@@ -1584,7 +1584,7 @@ Location 头部
 
 ### HTTP Tunnel 隧道
 
-![img_54.png](img_54.png)
+![img_54.png](assets/img_54.png)
 
 用于通过 HTTP 连接传输非 HTTP 协议格式的消息，常用于穿越防火墙
 - 建立隧道后，由于传输的并非 HTTP 消息，因此不再遵循请求/响应模式，已变为双向传输
@@ -1609,7 +1609,7 @@ Location 头部
   - Allow: 抵消 Disallow 指令
   - Sitemap: 指出站点地图的 URI
 
-![img_55.png](img_55.png)
+![img_55.png](assets/img_55.png)
 
 
 ## HTTP 协议的基本认证
@@ -1617,7 +1617,7 @@ Location 头部
 - RFC7235，一种基本的验证框架，被绝大部分浏览器所支持
 - 明文传输，如果不使用 TLS/SSL 传输，则会有安全问题
 
-![img_56.png](img_56.png)
+![img_56.png](assets/img_56.png)
 
 ### 认证请求
 - 在请求中传递认证信息：Authorization = credentials
@@ -1658,32 +1658,32 @@ Location 头部
   - 根域名服务器
   - 权威域名服务器
 
-![img_57.png](img_57.png)
+![img_57.png](assets/img_57.png)
 
 ### DNS 域名结构
 
-![img_58.png](img_58.png)
+![img_58.png](assets/img_58.png)
 
 ### 递归查询
 
-![img_59.png](img_59.png)
+![img_59.png](assets/img_59.png)
 
 ### DNS 报文：查询与响应
 
 - query: 查询域名
 - response: 返回 IP 地址
 
-![img_60.png](img_60.png)
+![img_60.png](assets/img_60.png)
 
-![img_61.png](img_61.png)
+![img_61.png](assets/img_61.png)
 
 ### DNS 报文
 
-![img_62.png](img_62.png)
+![img_62.png](assets/img_62.png)
 
 ### Questions 格式
 
-![img_63.png](img_63.png)
+![img_63.png](assets/img_63.png)
 
 - QNAME 编码规则
   - 以 . 分隔为多段，每段以字节数打头
@@ -1706,7 +1706,7 @@ Location 头部
 
 ### Answer 格式
 
-![img_64.png](img_64.png)
+![img_64.png](assets/img_64.png)
 
 - NAME: 前 2 比特为 11，接引用 QNAME 偏移
   - 在 DNS 头部的字符偏移数
